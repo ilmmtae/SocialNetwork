@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.core.cache import cache
@@ -35,7 +37,7 @@ class UserInviteView(APIView):
 
         cache.set(f"invite:{invite_code}", email, timeout=86400)
 
-        activation_link = f"http://127.0.0.1:8000/activate/?code={invite_code}"
+        activation_link = f"{os.getenv("HOST")}/activate/?code={invite_code}"
 
         try:
             send_mail(
