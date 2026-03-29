@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 from app.views import UserInviteView, UserActivateView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path('api/internal/invite/', UserInviteView.as_view(), name='user_invite'),
     path('activate/', UserActivateView.as_view(), name='activate_user'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
