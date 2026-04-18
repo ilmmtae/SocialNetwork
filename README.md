@@ -1,4 +1,4 @@
-# Django Social Engine
+# Django Social Network
 
 A robust backend for a social platform designed to manage user interactions, content distribution, and seamless integration with external services.
 
