@@ -3,13 +3,14 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.core.cache import cache
 from django.conf import settings
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from .models import Post
-from .serializers import PostSerializer, UserInviteSerializer
+from .models import Post, Like
+from .serializer import PostSerializer, UserInviteSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -121,3 +122,26 @@ class PostListCreateView(generics.ListCreateAPIView):
     )
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class LikeToggleAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        responses={201: {"message": "Like added"}, 204: {"message": "Like removed"}},
+        description="Toggles a like on a post. If like exists, deletes it. If not, creates it."
+    )
+    def post(self, request, post_id):
+        user = request.user
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        like, created = Like.objects.get_or_create(user=user, post=post)
+
+        if not created:
+            like.delete()
+            return Response({"message": "Like removed"}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({"message": "Like added"}, status=status.HTTP_201_CREATED)

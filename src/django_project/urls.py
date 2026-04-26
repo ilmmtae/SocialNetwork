@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from app.views import UserInviteView, UserActivateView
+from app.views import UserInviteView, UserActivateView, LikeToggleAPIView, PostListCreateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,6 @@ urlpatterns = [
     path('activate/', UserActivateView.as_view(), name='activate_user'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('posts/', PostListCreateView.as_view(), name='post-list-create'),
+    path('posts/<int:post_id>/like/', LikeToggleAPIView.as_view(), name='post-like-toggle'),
 ]

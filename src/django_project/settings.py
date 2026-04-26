@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
     'rest_framework',
     'drf_spectacular',
+    'app.apps.PostsConfig',
 ]
 
 REST_FRAMEWORK = {

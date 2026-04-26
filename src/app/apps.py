@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 
-
-class LearningAppConfig(AppConfig):
+class PostsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
     name = 'app'
+
+    def ready(self):
+        import app.signals
